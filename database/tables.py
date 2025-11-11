@@ -19,6 +19,7 @@ class Project(SQLModel, table=True):
     small_about: str
     big_about: str
     user_comment: str
+    cover_src: str
 
 class Feature(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -36,7 +37,7 @@ class Image(SQLModel, table=True):
     type_entity: str
     src: str
 
-class EntityTechnologies(SQLModel, table=True):
+class EntityTechnology(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     id_entity: int
     id_tech: int
