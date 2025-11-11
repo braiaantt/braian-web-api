@@ -1,12 +1,13 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
+from sqlmodel import Session
+from database.db import get_session
 from services.portfolio_service import PortfolioService
-from database import db as db
 
 router = APIRouter()
 
 @router.get("/portfolio", status_code=200)
-def get_portfolio():
-    service = PortfolioService(db.get_session())
+def get_portfolio(session: Session = Depends(get_session)):
+    service = PortfolioService(session)
     portfolio = service.get_portfolio()
     
     if portfolio:
