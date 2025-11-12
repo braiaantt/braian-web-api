@@ -21,7 +21,7 @@ def get_portfolio(session: Session = Depends(get_session)):
 def add_portfolio(portfolio: Portfolio, session: Session = Depends(get_session)):
     service = PortfolioService(session)
     try:
-        portfolio = service.add_portfolio(portfolio)
+        portfolio = service.insert_portfolio(portfolio)
         if portfolio:
             return {"success" : True,
                     "data" : portfolio}
