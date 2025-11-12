@@ -1,9 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session
-from database.db import get_session
-from database.tables import Portfolio
-from services.portfolio_service import PortfolioService
-from exceptions.exceptions import (PortfolioCreationError, PortfolioAlreadyExistsError)
+from database import get_session, Portfolio
+from services import PortfolioService
+from exceptions import PortfolioUpdatingError, PortfolioCreationError, PortfolioAlreadyExistsError, PortfolioNotExists
 
 router = APIRouter()
 
@@ -32,3 +31,16 @@ def add_portfolio(portfolio: Portfolio, session: Session = Depends(get_session))
     except PortfolioCreationError:
         raise HTTPException(status_code=500, detail="Error Creating Portfolio")
         
+@router.put("/portfolio", status_code=200)
+def update_portfolio(data: dict, session: Session = Depends(get_session)):
+    service = PortfolioService(session)
+    try:
+        portfolio_updated = service.update_portfolio(data)
+        if portfolio_updated:
+            return {"success" : True,
+                    "data" : portfolio_updated}
+        
+    except PortfolioNotExists:
+        raise HTTPException(status_code=404, detail="Inexistent Portfolio To Update")
+    except PortfolioUpdatingError:
+        raise HTTPException(status_code=409, detail="Internal Error Updating Portfolio")
