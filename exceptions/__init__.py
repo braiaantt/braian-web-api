@@ -1,6 +1,4 @@
 from .exceptions import (
-    PortfolioNotExists,
-    PortfolioAlreadyExistsError,
-    PortfolioCreationError,
-    PortfolioUpdatingError
+    PortfolioNotExists, PortfolioAlreadyExistsError, PortfolioCreationError, PortfolioUpdatingError,
+    TechnologyNotExists, TechnologyDeletingError, TechnologyCreationError, TechnologyUpdatingError
 )
