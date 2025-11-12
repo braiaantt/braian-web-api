@@ -5,7 +5,6 @@ from exceptions import PortfolioUpdatingError, PortfolioCreationError, Portfolio
 
 class PortfolioService():
     def __init__(self, session):
-        self.session = session
         self.portfolio_dao = PortfolioDao(session)
         self.technology_dao = TechnologyDao(session)
         self.project_dao = ProjectDao(session)
@@ -37,7 +36,7 @@ class PortfolioService():
 
         return portfolio
 
-    def add_portfolio(self, new_portfolio: Portfolio):
+    def insert_portfolio(self, new_portfolio: Portfolio):
         exists = self.portfolio_dao.get_portfolio()
 
         if exists:
