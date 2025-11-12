@@ -1,6 +1,6 @@
-from sqlmodel import Session, select
+from sqlmodel import Session, select, delete
 from sqlalchemy.exc import SQLAlchemyError
-from database.tables import Technology, EntityTechnology
+from database import Technology, EntityTechnology
 
 class TechnologyDao:
     def __init__(self, session: Session):
@@ -40,3 +40,40 @@ class TechnologyDao:
         except SQLAlchemyError as error:
             print("Error Read Technology: ", error)
             return []
+        
+    def get_tech(self, tech_id: int):
+        try:
+            technology = self.session.get(Technology, tech_id)
+
+            if not technology:
+                return None
+            
+            return technology
+        
+        except SQLAlchemyError as error:
+            print("Error Read Technology: ", error)
+            return None
+        
+    def delete_tech(self, tech_id):
+        try:
+            statement = delete(Technology).where(Technology.id == tech_id)
+            result = self.session.exec(statement)
+            self.session.commit()
+            return result.rowcount > 0
+        
+        except SQLAlchemyError as error:
+            self.session.rollback()
+            print("Error Delete Technology: ", error)
+            return False
+
+    def update_tech(self, technology: Technology):
+        try:
+            #'technology' is already attached to the session from TechnologyService
+            self.session.commit()
+            self.session.refresh(technology)
+            return technology
+        
+        except SQLAlchemyError as error:
+            print("Error Update Technology: ", error)
+            self.session.rollback()
+            return None
