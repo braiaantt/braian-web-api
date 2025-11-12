@@ -1,9 +1,7 @@
-from daos.portfolio_dao import PortfolioDao
-from daos.technology_dao import TechnologyDao
-from daos.project_dao import ProjectDao
-from models.portfolio import PortfolioRead
-from database.tables import Portfolio
-from exceptions.exceptions import (PortfolioAlreadyExistsError, PortfolioCreationError)
+from daos import PortfolioDao, TechnologyDao, ProjectDao
+from models import PortfolioRead
+from database import Portfolio
+from exceptions import PortfolioUpdatingError, PortfolioCreationError, PortfolioAlreadyExistsError, PortfolioNotExists
 
 class PortfolioService():
     def __init__(self, session):
@@ -52,5 +50,15 @@ class PortfolioService():
         
         return created
         
+    def update_portfolio(self, data: dict):
+        exists = self.portfolio_dao.get_portfolio()
 
+        if not exists:
+            raise PortfolioNotExists()
         
+        portfolio_updated = self.portfolio_dao.update_portfolio(data)
+
+        if not portfolio_updated:
+            raise PortfolioUpdatingError()
+            
+        return portfolio_updated

@@ -1,7 +1,16 @@
 from fastapi import FastAPI
+from routes import portfolio_router
+from contextlib import asynccontextmanager
+from database import init_db
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    init_db()
+    yield
 
-@app.get("/")
-def root():
-    return {"message" : "Holaholaholahola"}
+app = FastAPI(lifespan=lifespan)
+
+app.include_router(
+    portfolio_router,
+    tags=["Portfolio"]
+)
