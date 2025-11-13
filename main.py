@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routes import portfolio_router
+from routes import portfolio_router, technology_router
 from contextlib import asynccontextmanager
 from database import init_db
 
@@ -13,4 +13,9 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(
     portfolio_router,
     tags=["Portfolio"]
+)
+
+app.include_router(
+    technology_router,
+    tags="Technology"
 )
