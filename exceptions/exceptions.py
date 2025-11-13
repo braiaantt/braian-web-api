@@ -24,3 +24,17 @@ class TechnologyDeletingError(Exception):
 
 class TechnologyUpdatingError(Exception):
     pass
+
+#------ Project Exceptions ------
+
+class ProjectNotExists(Exception):
+    pass
+
+class ProjectDeletingError(Exception):
+    pass
+
+class ProjectUpdatingError(Exception):
+    pass
+
+class ProjectCreationError(Exception):
+    pass
