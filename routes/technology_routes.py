@@ -36,7 +36,7 @@ def update_technology(tech_id: int, data: TechnologyUpdate, session = Depends(ge
     except TechnologyUpdatingError:
         raise HTTPException(status_code=500, detail="Database Error Updating Technology")
 
-@router.delete("/technology/{tech_id}", status_code=20)
+@router.delete("/technology/{tech_id}", status_code=200)
 def delete_technology(tech_id: int, session = Depends(get_session)):
     service = TechnologyService(session)
     try:
