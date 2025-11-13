@@ -1,5 +1,8 @@
-from .project import PortfolioProject
+from .project import (PortfolioProject,
+                      ProjectUpdate)
+
 from .portfolio import (PortfolioProject,
-                       PortfolioRead,
-                       PortfolioUpdate)
+                        PortfolioRead,
+                        PortfolioUpdate)
+
 from .technology import TechnologyUpdate
