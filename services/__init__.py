@@ -1,2 +1,3 @@
 from .portfolio_service import PortfolioService
 from .technology_service import TechnologyService
+from .project_service import ProjectService
