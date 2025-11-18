@@ -1,5 +1,6 @@
 from sqlmodel import SQLModel, Field
 from typing import Optional
+from datetime import datetime
 
 class Portfolio(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -42,3 +43,19 @@ class EntityTechnology(SQLModel, table=True):
     id_entity: int
     id_tech: int
     type_entity: str
+
+#------ Auth ------
+
+class Admin(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    email: str
+    password: str
+    
+class RefreshToken(SQLModel, table=True):
+    __tablename__ = "refresh_tokens"
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    admin_id: int = Field(foreign_key="admin.id")
+    token: str
+    revoked: bool = False
+    expires_at: datetime
