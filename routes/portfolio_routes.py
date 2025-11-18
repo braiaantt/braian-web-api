@@ -3,11 +3,12 @@ from sqlmodel import Session
 from database import get_session, Portfolio
 from services import PortfolioService
 from exceptions import PortfolioUpdatingError, PortfolioCreationError, PortfolioAlreadyExistsError, PortfolioNotExists
+from auth import require_access_token
 
 router = APIRouter()
 
 @router.get("/portfolio", status_code=200)
-def get_portfolio(session: Session = Depends(get_session)):
+def get_portfolio(session: Session = Depends(get_session), _ = Depends(require_access_token)):
     service = PortfolioService(session)
     portfolio = service.get_portfolio()
     
