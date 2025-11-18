@@ -1,5 +1,6 @@
 from sqlmodel import SQLModel
 from typing import Optional
+from pydantic import BaseModel
 
 class PortfolioProject(SQLModel):
     id: int
@@ -7,7 +8,7 @@ class PortfolioProject(SQLModel):
     small_about: str
     cover_src: str
 
-class ProjectUpdate(SQLModel):
+class ProjectUpdate(BaseModel):
     name: Optional[str] = None
     small_about: Optional[str] = None
     big_about: Optional[str] = None
