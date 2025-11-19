@@ -14,8 +14,7 @@ def get_project(project_id: int, session = Depends(get_session)):
         project = service.get_project(project_id)
 
         if project:
-            return {"success" : True,
-                    "data" : project}
+            return {"data" : project}
     
     except ProjectNotExists:
         raise HTTPException(status_code=404, detail="Project Not Exists")
@@ -26,8 +25,7 @@ def insert_project(project: Project, session = Depends(get_session), _ = Depends
     try:
         new_project = service.insert_project(project)
         if new_project:
-            return {"success" : True,
-                    "data" : new_project}
+            return {"data" : new_project}
         
     except ProjectCreationError:
         raise HTTPException(status_code=500, detail="Database Error Creating Project")
@@ -38,8 +36,7 @@ def update_project(update_data: ProjectUpdate, session = Depends(get_session), _
     try:
         project_updated = service.update_project(update_data)
         if project_updated:
-            return {"success" : True,
-                    "data" : project_updated}
+            return {"data" : project_updated}
     
     except ProjectNotExists:
         raise HTTPException(status_code=404, detail="Project To Update Not Exists")
@@ -47,13 +44,13 @@ def update_project(update_data: ProjectUpdate, session = Depends(get_session), _
     except ProjectUpdatingError:
         raise HTTPException(status_code=500, detail="Database Error Updating Project")
     
-@router.delete("project/{project_id}", status_code=200)
+@router.delete("project/{project_id}", status_code=204)
 def delete_project(project_id: int, session = Depends(get_session), _ = Depends(require_access_token)):
     service = ProjectService(session)
     try: 
         result = service.delete_project(project_id)
         if result:
-            return {"success" : True}
+            return
     
     except ProjectNotExists:
         raise HTTPException(status_code=404, detail="Project To Delete Not Exists")

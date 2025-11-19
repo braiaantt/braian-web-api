@@ -13,8 +13,7 @@ def get_portfolio(session: Session = Depends(get_session)):
     portfolio = service.get_portfolio()
     
     if portfolio:
-        return {"success" : True,
-                "data" : portfolio}
+        return {"data" : portfolio}
     
     raise HTTPException(status_code=404, detail="Portfolio Not Exists")
 
@@ -24,8 +23,7 @@ def add_portfolio(portfolio: Portfolio, session: Session = Depends(get_session),
     try:
         portfolio = service.insert_portfolio(portfolio)
         if portfolio:
-            return {"success" : True,
-                    "data" : portfolio}
+            return {"data" : portfolio}
     
     except PortfolioAlreadyExistsError:
         raise HTTPException(status_code=409, detail="Portfolio Already Exists")
@@ -38,8 +36,7 @@ def update_portfolio(data: dict, session: Session = Depends(get_session), _ = De
     try:
         portfolio_updated = service.update_portfolio(data)
         if portfolio_updated:
-            return {"success" : True,
-                    "data" : portfolio_updated}
+            return {"data" : portfolio_updated}
         
     except PortfolioNotExists:
         raise HTTPException(status_code=404, detail="Inexistent Portfolio To Update")

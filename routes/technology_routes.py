@@ -14,8 +14,7 @@ def insert_technology(technology: Technology, session = Depends(get_session), _ 
         new_technology = service.insert_technology(technology)
 
         if new_technology:
-            return {"success" : True,
-                    "data" : new_technology}
+            return {"data" : new_technology}
     
     except TechnologyCreationError:
         raise HTTPException(status_code=500, detail="Database Error Creating Technology")
@@ -28,8 +27,7 @@ def update_technology(tech_id: int, data: TechnologyUpdate, session = Depends(ge
         updated_technology = service.update_technology(tech_id, data)
         
         if updated_technology:
-            return {"success" : True,
-                    "data" : updated_technology}
+            return {"data" : updated_technology}
 
     except TechnologyNotExists:
         raise HTTPException(status_code=404, detail="Technology Not Exists")
@@ -37,14 +35,14 @@ def update_technology(tech_id: int, data: TechnologyUpdate, session = Depends(ge
     except TechnologyUpdatingError:
         raise HTTPException(status_code=500, detail="Database Error Updating Technology")
 
-@router.delete("/technology/{tech_id}", status_code=200)
+@router.delete("/technology/{tech_id}", status_code=204)
 def delete_technology(tech_id: int, session = Depends(get_session), _ = Depends(require_access_token)):
     service = TechnologyService(session)
     try:
         result = service.delete_technology(tech_id)
         
         if result:
-            return {"success" : True}
+            return
     
     except TechnologyNotExists:
         raise HTTPException(status_code=404, detail="Technology Not Exists")
