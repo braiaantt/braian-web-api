@@ -2,9 +2,7 @@ from jose import jwt, JWTError
 from datetime import datetime, timezone, timedelta
 import os
 from dotenv import load_dotenv
-from .refresh_tokens import RefreshTokenRevoked
 from .exceptions import TokenExpired, TokenInvalidSignature, TokenInvalidType
-from database import RefreshToken
 
 load_dotenv()
 
@@ -36,7 +34,7 @@ def create_refresh_token(admin_id: int):
 
 def validate_signature_and_type(client_token: str, token_type: str):
     try:
-        payload = jwt.decode(client_token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(client_token, key=SECRET_KEY, algorithms=[ALGORITHM])
     except JWTError:
         raise TokenInvalidSignature() 
 
@@ -44,15 +42,6 @@ def validate_signature_and_type(client_token: str, token_type: str):
         raise TokenInvalidType()
     
     return payload
-
-def validate_exp_and_revoke(db_token: RefreshToken, validated_payload: dict):
-    exp = datetime.fromtimestamp(validated_payload["exp"], tz=timezone.utc)
-    if exp < datetime.now(timezone.utc):
-        raise TokenExpired()
-        
-    revoked = db_token.revoked
-    if revoked:
-        raise RefreshTokenRevoked()
 
 def validate_access_token(token: str):
     payload = validate_signature_and_type(token, "access")
@@ -65,10 +54,10 @@ def validate_access_token(token: str):
       
 
 def extract_expire(token: str):
-        payload = jwt.decode(token, options={"verify_signature": False})
-        expires = payload["exp"]
-        return  datetime.fromtimestamp(expires, tz=timezone.utc)
+    payload = jwt.decode(token, key=SECRET_KEY, options={"verify_signature": False})
+    expires = payload["exp"]
+    return  datetime.fromtimestamp(expires, tz=timezone.utc)
     
 def extract_admin_id(token: str):
-        payload = jwt.decode(token, options={"verify_signature": False})
-        return payload["sub"]
+    payload = jwt.decode(token, key=SECRET_KEY, options={"verify_signature": False})
+    return payload["sub"]
