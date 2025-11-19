@@ -3,6 +3,7 @@ from services import ProjectService
 from database import get_session, Project
 from exceptions import ProjectNotExists, ProjectCreationError, ProjectUpdatingError, ProjectDeletingError
 from models import ProjectUpdate
+from auth import require_access_token
 
 router = APIRouter()
 
@@ -20,7 +21,7 @@ def get_project(project_id: int, session = Depends(get_session)):
         raise HTTPException(status_code=404, detail="Project Not Exists")
     
 @router.post("/project", status_code=201)
-def insert_project(project: Project, session = Depends(get_session)):
+def insert_project(project: Project, session = Depends(get_session), _ = Depends(require_access_token)):
     service = ProjectService(session)
     try:
         new_project = service.insert_project(project)
@@ -32,7 +33,7 @@ def insert_project(project: Project, session = Depends(get_session)):
         raise HTTPException(status_code=500, detail="Database Error Creating Project")
     
 @router.put("/project/{project_id}", 200)
-def update_project(update_data: ProjectUpdate, session = Depends(get_session)):
+def update_project(update_data: ProjectUpdate, session = Depends(get_session), _ = Depends(require_access_token)):
     service = ProjectService(session)
     try:
         project_updated = service.update_project(update_data)
@@ -47,7 +48,7 @@ def update_project(update_data: ProjectUpdate, session = Depends(get_session)):
         raise HTTPException(status_code=500, detail="Database Error Updating Project")
     
 @router.delete("project/{project_id}", status_code=200)
-def delete_project(project_id: int, session = Depends(get_session)):
+def delete_project(project_id: int, session = Depends(get_session), _ = Depends(require_access_token)):
     service = ProjectService(session)
     try: 
         result = service.delete_project(project_id)

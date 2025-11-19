@@ -3,11 +3,12 @@ from database import get_session, Technology
 from models import TechnologyUpdate
 from services import TechnologyService
 from exceptions import TechnologyNotExists, TechnologyCreationError, TechnologyUpdatingError, TechnologyDeletingError
+from auth import require_access_token
 
 router = APIRouter()
 
 @router.post("/technology", status_code=201)
-def insert_technology(technology: Technology, session = Depends(get_session)):
+def insert_technology(technology: Technology, session = Depends(get_session), _ = Depends(require_access_token)):
     service = TechnologyService(session)
     try:
         new_technology = service.insert_technology(technology)
@@ -21,7 +22,7 @@ def insert_technology(technology: Technology, session = Depends(get_session)):
 
 
 @router.put("/technology/{tech_id}", status_code=200)
-def update_technology(tech_id: int, data: TechnologyUpdate, session = Depends(get_session)):
+def update_technology(tech_id: int, data: TechnologyUpdate, session = Depends(get_session), _ = Depends(require_access_token)):
     service = TechnologyService(session)
     try:
         updated_technology = service.update_technology(tech_id, data)
@@ -37,7 +38,7 @@ def update_technology(tech_id: int, data: TechnologyUpdate, session = Depends(ge
         raise HTTPException(status_code=500, detail="Database Error Updating Technology")
 
 @router.delete("/technology/{tech_id}", status_code=200)
-def delete_technology(tech_id: int, session = Depends(get_session)):
+def delete_technology(tech_id: int, session = Depends(get_session), _ = Depends(require_access_token)):
     service = TechnologyService(session)
     try:
         result = service.delete_technology(tech_id)

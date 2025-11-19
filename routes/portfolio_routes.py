@@ -8,7 +8,7 @@ from auth import require_access_token
 router = APIRouter()
 
 @router.get("/portfolio", status_code=200)
-def get_portfolio(session: Session = Depends(get_session), _ = Depends(require_access_token)):
+def get_portfolio(session: Session = Depends(get_session)):
     service = PortfolioService(session)
     portfolio = service.get_portfolio()
     
@@ -19,7 +19,7 @@ def get_portfolio(session: Session = Depends(get_session), _ = Depends(require_a
     raise HTTPException(status_code=404, detail="Portfolio Not Exists")
 
 @router.post("/portfolio", status_code=201)
-def add_portfolio(portfolio: Portfolio, session: Session = Depends(get_session)):
+def add_portfolio(portfolio: Portfolio, session: Session = Depends(get_session), _ = Depends(require_access_token)):
     service = PortfolioService(session)
     try:
         portfolio = service.insert_portfolio(portfolio)
@@ -33,7 +33,7 @@ def add_portfolio(portfolio: Portfolio, session: Session = Depends(get_session))
         raise HTTPException(status_code=500, detail="Error Creating Portfolio")
         
 @router.put("/portfolio", status_code=200)
-def update_portfolio(data: dict, session: Session = Depends(get_session)):
+def update_portfolio(data: dict, session: Session = Depends(get_session), _ = Depends(require_access_token)):
     service = PortfolioService(session)
     try:
         portfolio_updated = service.update_portfolio(data)
