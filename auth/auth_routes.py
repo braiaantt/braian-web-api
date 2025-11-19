@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from database import get_session
 from .admin import LoginData, AdminService, AdminNotExists, InvalidCredentials
 from .refresh_tokens import (RefreshTokenService, 
-                             RefreshTokenCreationError,RefreshTokenRevoked, RefreshTokenRevokingError)
-from .exceptions import TokenInvalidType, TokenExpired, TokenInvalidSignature
-from .jwt_utils import create_access_token, create_refresh_token, validate_signature_and_type, validate_exp_and_revoke
+                             RefreshTokenCreationError,RefreshTokenRevoked, RefreshTokenRevokingError, RefreshTokenExpired)
+from .exceptions import TokenInvalidType, TokenInvalidSignature
+from .jwt_utils import create_access_token, create_refresh_token, validate_signature_and_type
 
 
 router = APIRouter()
@@ -50,7 +50,7 @@ def refresh_token(client_token: str, session = Depends(get_session)):
 
         if not exists:
             raise HTTPException(status_code=404, detail="Refresh Token Not Exists")
-        validate_exp_and_revoke(exists, validated_payload)
+        refresh_token_service.validate_exp_and_revoke(exists, validated_payload)
         refresh_token_service.revoke_token(exists)
 
         access_token = create_access_token(exists.admin_id)
@@ -69,7 +69,7 @@ def refresh_token(client_token: str, session = Depends(get_session)):
     except TokenInvalidType:
         raise HTTPException(status_code=401, detail="Invalid Token Type")
     
-    except TokenExpired:
+    except RefreshTokenExpired:
         raise HTTPException(status_code=404, detail="Refresh Token Expired")
     
     except RefreshTokenRevoked:
