@@ -6,3 +6,6 @@ class RefreshTokenRevoked(Exception):
 
 class RefreshTokenRevokingError(Exception):
     pass
+
+class RefreshTokenExpired(Exception):
+    pass
