@@ -1,7 +1,8 @@
 from .refresh_tokens_dao import RefreshTokenDao
+from datetime import datetime, timezone
 from sqlmodel import Session
 from database import RefreshToken
-from .refresh_token_exceptions import RefreshTokenCreationError, RefreshTokenRevokingError
+from .refresh_token_exceptions import RefreshTokenCreationError, RefreshTokenRevokingError, RefreshTokenRevoked, RefreshTokenExpired
 from ..jwt_utils import extract_expire
 
 class RefreshTokenService:
@@ -35,4 +36,14 @@ class RefreshTokenService:
             return None
         
         return exists
+    
+    @staticmethod
+    def validate_exp_and_revoke(db_token: RefreshToken, validated_payload: dict):
+        exp = datetime.fromtimestamp(validated_payload["exp"], tz=timezone.utc)
+        if exp < datetime.now(timezone.utc):
+            raise RefreshTokenExpired()
+        
+        revoked = db_token.revoked
+        if revoked:
+            raise RefreshTokenRevoked()
             
