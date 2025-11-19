@@ -18,7 +18,7 @@ app.include_router(
 
 app.include_router(
     technology_router,
-    tags="Technology"
+    tags=["Technology"]
 )
 
 app.include_router(
