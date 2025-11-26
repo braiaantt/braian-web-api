@@ -8,6 +8,9 @@ class TechnologyService:
     def __init__(self, session: Session):
         self.technologyDao = TechnologyDao(session)
 
+    def get_all_technologies(self):
+        return self.technologyDao.get_all_techs()
+
     def insert_technology(self, technology: Technology):
         technology_created = self.technologyDao.insert_technology(technology)
 
