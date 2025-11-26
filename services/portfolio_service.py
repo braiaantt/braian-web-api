@@ -27,7 +27,7 @@ class PortfolioService():
         )
 
         #get technologies
-        portfolio.techs = self.technology_dao.get_techs(
+        portfolio.techs = self.technology_dao.get_entity_techs(
             self.technology_dao.get_tech_ids(base_portfolio.id, "portfolio")
         )
 
