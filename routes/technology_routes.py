@@ -7,6 +7,12 @@ from auth import require_access_token
 
 router = APIRouter()
 
+@router.get("/technology", status_code=200)
+def get_technologies(session = Depends(get_session), _ = Depends(require_access_token)):
+    service = TechnologyService(session)
+    technologies = service.get_all_technologies()
+    return {"data" : technologies}
+
 @router.post("/technology", status_code=201)
 def insert_technology(technology: Technology, session = Depends(get_session), _ = Depends(require_access_token)):
     service = TechnologyService(session)
