@@ -18,6 +18,9 @@ class TechnologyDao:
             print("Error Insert Technology: ", error)
             return None
         
+    def get_all_techs(self):
+        return self.session.exec(select(Technology)).all()
+
     def get_tech_ids(self, id_entity: int, type_entity: str):
         try:
             query = select(EntityTechnology.id_tech).where(
@@ -31,28 +34,12 @@ class TechnologyDao:
             print("Error Read EntityTechnology: ", error)
             return []
 
-    def get_techs(self, tech_ids: list[int]):
-        try:
-            query = select(Technology).where(Technology.id.in_(tech_ids))
-            results = self.session.exec(query).all()
-            return results
-        
-        except SQLAlchemyError as error:
-            print("Error Read Technology: ", error)
-            return []
+    def get_entity_techs(self, tech_ids: list[int]):
+        query = select(Technology).where(Technology.id.in_(tech_ids))
+        return self.session.exec(query).all()
         
     def get_tech(self, tech_id: int):
-        try:
-            technology = self.session.get(Technology, tech_id)
-
-            if not technology:
-                return None
-            
-            return technology
-        
-        except SQLAlchemyError as error:
-            print("Error Read Technology: ", error)
-            return None
+        return self.session.get(Technology, tech_id)
         
     def delete_tech(self, tech_id):
         try:
