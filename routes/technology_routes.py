@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Form, UploadFile, File
 from database import get_session, Technology
 from models import TechnologyUpdate
 from services import TechnologyService
-from exceptions import TechnologyNotExists, TechnologyCreationError, TechnologyUpdatingError, TechnologyDeletingError
+from exceptions import TechnologyNotExists, TechnologyCreationError, TechnologyUpdatingError, TechnologyDeletingError, InvalidContentType
 from auth import require_access_token
 
 router = APIRouter()
@@ -14,16 +14,24 @@ def get_technologies(session = Depends(get_session), _ = Depends(require_access_
     return {"data" : technologies}
 
 @router.post("/technology", status_code=201)
-def insert_technology(technology: Technology, session = Depends(get_session), _ = Depends(require_access_token)):
+async def insert_technology(
+    name: str = Form(...),
+    file: UploadFile = File(...), 
+    session = Depends(get_session), 
+    _ = Depends(require_access_token)
+    ):
+
     service = TechnologyService(session)
     try:
-        new_technology = service.insert_technology(technology)
+        new_technology = await service.insert_technology(name, file)
 
         if new_technology:
             return {"data" : new_technology}
     
     except TechnologyCreationError:
         raise HTTPException(status_code=500, detail="Database Error Creating Technology")
+    except InvalidContentType:
+        raise HTTPException(status_code=400, detail="Invalid Content Type")
 
 
 @router.put("/technology/{tech_id}", status_code=200)
