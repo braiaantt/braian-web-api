@@ -2,7 +2,9 @@ from sqlmodel import Session
 from daos import TechnologyDao
 from database import Technology
 from models import TechnologyUpdate
-from exceptions import TechnologyNotExists, TechnologyDeletingError, TechnologyCreationError, TechnologyUpdatingError
+from exceptions import TechnologyNotExists, TechnologyDeletingError, TechnologyCreationError, TechnologyUpdatingError, InvalidContentType
+from fastapi import UploadFile
+from utils import FileManager
 
 class TechnologyService:
     def __init__(self, session: Session):
@@ -11,7 +13,10 @@ class TechnologyService:
     def get_all_technologies(self):
         return self.technologyDao.get_all_techs()
 
-    def insert_technology(self, technology: Technology):
+    async def insert_technology(self, tech_name: str, file: UploadFile):
+        icon_src = await FileManager.save_technology_image(file)
+
+        technology = Technology(name=tech_name, icon_src=icon_src)
         technology_created = self.technologyDao.insert_technology(technology)
 
         if not technology_created:
