@@ -38,3 +38,8 @@ class ProjectUpdatingError(Exception):
 
 class ProjectCreationError(Exception):
     pass
+
+#------ File Exceptions ------
+
+class InvalidContentType(Exception):
+    pass
