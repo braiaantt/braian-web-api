@@ -17,7 +17,7 @@ def create_access_token(admin_id: int):
     payload = {
         "sub" : str(admin_id),
         "type" : "access",
-        "exp" : expire
+        "exp" : int(expire.timestamp())
     }
 
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
@@ -27,14 +27,14 @@ def create_refresh_token(admin_id: int):
     payload = {
         "sub" : str(admin_id),
         "type" : "refresh",
-        "exp" : expire
+        "exp" : int(expire.timestamp())
     }
 
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 
 def validate_signature_and_type(client_token: str, token_type: str):
     try:
-        payload = jwt.decode(client_token, key=SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(client_token, key=SECRET_KEY, algorithms=[ALGORITHM], options={"verify_exp": False})
     except JWTError:
         raise TokenInvalidSignature() 
 
@@ -45,7 +45,7 @@ def validate_signature_and_type(client_token: str, token_type: str):
 
 def validate_access_token(token: str):
     payload = validate_signature_and_type(token, "access")
-    
+
     exp = datetime.fromtimestamp(payload["exp"], tz=timezone.utc)
     if exp < datetime.now(timezone.utc):
         raise TokenExpired()
