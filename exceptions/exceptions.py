@@ -43,3 +43,11 @@ class ProjectCreationError(Exception):
 
 class InvalidContentType(Exception):
     pass
+
+#------ Entity Technology Exceptions ------
+
+class EntityTechnologyCreationError(Exception):
+    pass
+
+class EntityTechnologyRelationNotExists(Exception):
+    pass
