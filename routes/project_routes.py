@@ -1,8 +1,8 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Form, File, UploadFile
 from services import ProjectService
 from database import get_session, Project
 from exceptions import ProjectNotExists, ProjectCreationError, ProjectUpdatingError, ProjectDeletingError
-from models import ProjectUpdate
+from models import ProjectUpdate, ProjectRead
 from auth import require_access_token
 
 router = APIRouter()
@@ -14,29 +14,35 @@ def get_project(project_id: int, session = Depends(get_session)):
         project = service.get_project(project_id)
 
         if project:
-            return {"data" : project}
+            return project
     
     except ProjectNotExists:
         raise HTTPException(status_code=404, detail="Project Not Exists")
     
-@router.post("/project", status_code=201)
-def insert_project(project: Project, session = Depends(get_session), _ = Depends(require_access_token)):
+@router.post("/project", status_code=201, response_model=ProjectRead)
+async def insert_project(
+    project: str = Form(...),
+    file: UploadFile = File(...),
+    session = Depends(get_session), 
+    _ = Depends(require_access_token)
+    ):
+
     service = ProjectService(session)
     try:
-        new_project = service.insert_project(project)
+        new_project = await service.insert_project(project, file)
         if new_project:
-            return {"data" : new_project}
+            return new_project
         
     except ProjectCreationError:
         raise HTTPException(status_code=500, detail="Database Error Creating Project")
     
-@router.put("/project/{project_id}", 200)
+@router.put("/project/{project_id}", status_code=200)
 def update_project(update_data: ProjectUpdate, session = Depends(get_session), _ = Depends(require_access_token)):
     service = ProjectService(session)
     try:
         project_updated = service.update_project(update_data)
         if project_updated:
-            return {"data" : project_updated}
+            return project_updated
     
     except ProjectNotExists:
         raise HTTPException(status_code=404, detail="Project To Update Not Exists")
