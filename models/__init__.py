@@ -1,5 +1,7 @@
 from .project import (PortfolioProject,
-                      ProjectUpdate)
+                      ProjectUpdate,
+                      ProjectCreate,
+                      ProjectRead)
 
 from .portfolio import (PortfolioProject,
                         PortfolioRead,
