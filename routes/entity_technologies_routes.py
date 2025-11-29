@@ -29,7 +29,11 @@ def delete_relation(id_entity: int, type_entity: EntityType, id_tech: int,
                     session = Depends(get_session), _ = Depends(require_access_token)):
     service = EntityTechnologyService(session)
     try:
-        data = EntityTechnologyData(id_entity, type_entity, id_tech)
+        data = EntityTechnologyData(
+            id_entity=id_entity,
+            type_entity=type_entity,
+            id_tech=id_tech
+        )
         result = service.delete_relation(data)
 
         if not result:
