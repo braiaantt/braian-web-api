@@ -7,9 +7,10 @@ from exceptions import InvalidContentType
 class FileManager:
     STATIC_ROOT = "static"               
     TECHNOLOGY_FOLDER = "technologies"
+    PROJECT_FOLDER = "projects"
 
     @staticmethod
-    async def save_technology_image(file: UploadFile) -> str:
+    async def save_image(file: UploadFile, folder: str) -> str:
 
         if not file.content_type.startswith("image/"):
             raise InvalidContentType()
@@ -17,7 +18,7 @@ class FileManager:
         ext = os.path.splitext(file.filename)[1]
         unique_name = f"{uuid.uuid4().hex}{ext}"
 
-        folder_path = os.path.join(FileManager.STATIC_ROOT, FileManager.TECHNOLOGY_FOLDER)
+        folder_path = os.path.join(FileManager.STATIC_ROOT, folder)
         os.makedirs(folder_path, exist_ok=True)
 
         file_path = os.path.join(folder_path, unique_name)
@@ -26,6 +27,6 @@ class FileManager:
         with open(file_path, "wb") as f:
             f.write(file_bytes)
 
-        public_path = f"/static/{FileManager.TECHNOLOGY_FOLDER}/{unique_name}"
+        public_path = f"/static/{folder}/{unique_name}"
 
         return public_path
