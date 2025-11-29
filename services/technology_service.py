@@ -17,7 +17,7 @@ class TechnologyService:
         return self.technologyDao.get_tech(tech_id)
 
     async def insert_technology(self, tech_name: str, file: UploadFile):
-        icon_src = await FileManager.save_technology_image(file)
+        icon_src = await FileManager.save_image(file, FileManager.TECHNOLOGY_FOLDER)
 
         technology = Technology(name=tech_name, icon_src=icon_src)
         technology_created = self.technologyDao.insert_technology(technology)
