@@ -1,16 +1,19 @@
 from daos import ProjectDao
 from sqlmodel import Session
 from exceptions import ProjectNotExists, ProjectDeletingError, ProjectUpdatingError, ProjectCreationError
-from models import ProjectUpdate
+from models import ProjectUpdate, ProjectCreate
 from database import Project
+from fastapi import UploadFile
+from utils import FileManager
+import json
 
 class ProjectService:
     def __init__(self, session: Session):
         self.project_dao = ProjectDao(session)
 
-    def insert_project(self, project: Project):
+    async def insert_project(self, project_json: str, file: UploadFile):
+        project = await self.create_project(project_json, file)
         project_inserted = self.project_dao.insert_project(project)
-
         if not project_inserted:
             raise ProjectCreationError()
         
@@ -51,3 +54,19 @@ class ProjectService:
             raise ProjectDeletingError()
         
         return True
+    
+    #------ Helpers ------
+
+    async def create_project(self, project_json: str, file: UploadFile):
+        data = json.loads(project_json)
+        project_data = ProjectCreate(**data)
+        cover_src = await FileManager.save_image(file, FileManager.PROJECT_FOLDER)
+
+        project = Project(
+            name=project_data.name,
+            small_about=project_data.small_about,
+            big_about=project_data.big_about,
+            user_comment=project_data.user_comment,
+            cover_src=cover_src
+        )
+        return project
