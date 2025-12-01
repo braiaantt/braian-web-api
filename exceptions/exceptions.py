@@ -51,3 +51,14 @@ class EntityTechnologyCreationError(Exception):
 
 class EntityTechnologyRelationNotExists(Exception):
     pass
+    
+#------ Entity Image Exceptions ------
+
+class EntityImageCreationError(Exception):
+    pass
+
+class EntityImageNotFound(Exception):
+    pass
+
+class EntityImageDeletingError(Exception):
+    pass
