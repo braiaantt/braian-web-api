@@ -1,12 +1,5 @@
-from sqlmodel import SQLModel
 from typing import Optional
 from pydantic import BaseModel
-
-class PortfolioProject(SQLModel):
-    id: int
-    name: str
-    small_about: str
-    cover_src: str
 
 class ProjectUpdate(BaseModel):
     name: Optional[str] = None
