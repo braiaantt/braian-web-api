@@ -1,7 +1,7 @@
 from sqlmodel import Session, select
 from sqlalchemy.exc import SQLAlchemyError
 from database import EntityTechnology
-from models import EntityTechnologyData
+from models.entity_technology import EntityTechnologyData
 
 class EntityTechnologyDao:
     def __init__(self, session: Session):
