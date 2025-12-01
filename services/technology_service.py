@@ -1,10 +1,10 @@
 from sqlmodel import Session
-from daos import TechnologyDao
-from database import Technology
+from daos.technology_dao import TechnologyDao
+from database.tables import Technology
 from models.technology import TechnologyUpdate
 from exceptions import TechnologyNotExists, TechnologyDeletingError, TechnologyCreationError, TechnologyUpdatingError, InvalidContentType
 from fastapi import UploadFile
-from utils import FileManager
+from utils.file_manager import FileManager
 
 class TechnologyService:
     def __init__(self, session: Session):

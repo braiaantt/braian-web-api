@@ -1,9 +1,10 @@
 from fastapi import APIRouter, HTTPException, Depends, Form, File, UploadFile
-from services import ProjectService
-from database import get_session, Project
+from services.project_service import ProjectService
+from database.db import get_session
+from database.tables import Project
 from exceptions import ProjectNotExists, ProjectCreationError, ProjectUpdatingError, ProjectDeletingError
-from models import ProjectUpdate, ProjectRead
-from auth import require_access_token
+from models.project import ProjectUpdate, ProjectRead
+from auth.dependencies import require_access_token
 
 router = APIRouter()
 

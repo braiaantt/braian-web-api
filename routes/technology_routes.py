@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, Form, UploadFile, File
-from database import get_session, Technology
-from models import TechnologyUpdate
-from services import TechnologyService
+from database.db import get_session
+from models.technology import TechnologyUpdate
+from services.technology_service import TechnologyService
 from exceptions import TechnologyNotExists, TechnologyCreationError, TechnologyUpdatingError, TechnologyDeletingError, InvalidContentType
-from auth import require_access_token
+from auth.dependencies import require_access_token
 
 router = APIRouter()
 

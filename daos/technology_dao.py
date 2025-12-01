@@ -1,6 +1,6 @@
 from sqlmodel import Session, select, delete
 from sqlalchemy.exc import SQLAlchemyError
-from database import Technology, EntityTechnology
+from database.tables import Technology, EntityTechnology
 
 class TechnologyDao:
     def __init__(self, session: Session):

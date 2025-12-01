@@ -1,8 +1,10 @@
-from daos import PortfolioDao, TechnologyDao, ProjectDao
+from daos.portfolio_dao import PortfolioDao
+from daos.technology_dao import TechnologyDao
+from daos.project_dao import ProjectDao
 from models.portfolio import PortfolioRead
 from models.technology import TechnologyRead
 from models.project import ProjectRead
-from database import Portfolio
+from database.tables import Portfolio
 from exceptions import PortfolioUpdatingError, PortfolioCreationError, PortfolioAlreadyExistsError, PortfolioNotExists
 
 class PortfolioService():

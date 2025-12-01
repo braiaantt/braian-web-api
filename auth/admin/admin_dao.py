@@ -1,5 +1,5 @@
 from sqlmodel import Session, select
-from database import Admin
+from database.tables import Admin
 
 class AdminDao:
     def __init__(self, session: Session):

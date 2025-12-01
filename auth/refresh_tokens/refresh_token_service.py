@@ -1,7 +1,7 @@
 from .refresh_tokens_dao import RefreshTokenDao
 from datetime import datetime, timezone
 from sqlmodel import Session
-from database import RefreshToken
+from database.tables import RefreshToken
 from .refresh_token_exceptions import RefreshTokenCreationError, RefreshTokenRevokingError, RefreshTokenRevoked, RefreshTokenExpired
 from ..jwt_utils import extract_expire
 

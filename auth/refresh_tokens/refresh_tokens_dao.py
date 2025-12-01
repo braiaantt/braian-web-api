@@ -1,4 +1,4 @@
-from database import RefreshToken
+from database.tables import RefreshToken
 from sqlmodel import Session, select
 from sqlalchemy.exc import SQLAlchemyError
 

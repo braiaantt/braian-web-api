@@ -1,6 +1,6 @@
 from sqlmodel import Session, select
 from sqlalchemy.exc import SQLAlchemyError
-from database import EntityTechnology
+from database.tables import EntityTechnology
 from models.entity_technology import EntityTechnologyData
 
 class EntityTechnologyDao:

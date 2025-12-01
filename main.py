@@ -1,9 +1,13 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from routes import portfolio_router, technology_router, entity_technology_router, project_router
-from auth import auth_router
+from auth.auth_routes import router as auth_router
+from routes.entity_technologies_routes import router as entity_technology_router
+from routes.portfolio_routes import router as portfolio_router
+from routes.technology_routes import router as technology_router
+from routes.project_routes import router as project_router
+from auth.auth_routes import router as auth_router
 from contextlib import asynccontextmanager
-from database import init_db
+from database.db import init_db
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

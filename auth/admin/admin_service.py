@@ -2,7 +2,7 @@ from .admin_dao import AdminDao
 from sqlmodel import Session
 from .admin_model import LoginData
 from .admin_exceptions import AdminNotExists, InvalidCredentials
-from utils import verify_password
+from utils.password_utils import verify_password
 
 class AdminService:
     def __init__(self, session: Session):

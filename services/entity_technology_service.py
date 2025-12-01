@@ -1,9 +1,9 @@
-from daos import EntityTechnologyDao
+from daos.entity_technology_dao import EntityTechnologyDao
 from sqlmodel import Session
 from models.entity_technology import EntityTechnologyData
-from database import EntityTechnology
+from database.tables import EntityTechnology
 from exceptions import EntityTechnologyCreationError, EntityTechnologyRelationNotExists
-from services import TechnologyService
+from services.technology_service import TechnologyService
 
 class EntityTechnologyService:
     def __init__(self, session: Session):

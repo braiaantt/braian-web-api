@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session
-from database import get_session, Portfolio
-from services import PortfolioService
+from database.db import get_session
+from database.tables import Portfolio
+from services.portfolio_service import PortfolioService
 from exceptions import PortfolioUpdatingError, PortfolioCreationError, PortfolioAlreadyExistsError, PortfolioNotExists
-from auth import require_access_token
+from auth.dependencies import require_access_token
 
 router = APIRouter()
 

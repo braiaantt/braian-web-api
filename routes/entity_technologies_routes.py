@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from models.entity_technology import EntityTechnologyData
 from models.entity_type import EntityType
 from models.technology import TechnologyRead
-from database import get_session
-from auth import require_access_token
-from services import EntityTechnologyService
+from database.db import get_session
+from auth.dependencies import require_access_token
+from services.entity_technology_service import EntityTechnologyService
 from exceptions import EntityTechnologyCreationError, EntityTechnologyRelationNotExists
 
 router = APIRouter()
