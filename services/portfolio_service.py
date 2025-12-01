@@ -1,5 +1,7 @@
 from daos import PortfolioDao, TechnologyDao, ProjectDao
-from models import PortfolioRead
+from models.portfolio import PortfolioRead
+from models.technology import TechnologyRead
+from models.project import ProjectRead
 from database import Portfolio
 from exceptions import PortfolioUpdatingError, PortfolioCreationError, PortfolioAlreadyExistsError, PortfolioNotExists
 
@@ -27,12 +29,19 @@ class PortfolioService():
         )
 
         #get technologies
-        portfolio.techs = self.technology_dao.get_entity_techs(
-            self.technology_dao.get_tech_ids(base_portfolio.id, "portfolio")
-        )
+        tech_ids = self.technology_dao.get_tech_ids(base_portfolio.id, "portfolio")
+        techs = self.technology_dao.get_entity_techs(tech_ids)
+        portfolio.techs = [
+            TechnologyRead.model_validate(tech.model_dump())
+            for tech in techs
+        ]
 
         #get projects
-        portfolio.projects = self.project_dao.get_portfolio_projects()
+        projects = self.project_dao.get_portfolio_projects()
+        portfolio.projects = [
+            ProjectRead.model_validate(project.model_dump())
+            for project in projects
+        ]
 
         return portfolio
 
