@@ -1,7 +1,7 @@
 from daos import ProjectDao
 from sqlmodel import Session
 from exceptions import ProjectNotExists, ProjectDeletingError, ProjectUpdatingError, ProjectCreationError
-from models import ProjectUpdate, ProjectCreate
+from models.project import ProjectUpdate, ProjectCreate
 from database import Project
 from fastapi import UploadFile
 from utils import FileManager

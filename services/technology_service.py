@@ -1,7 +1,7 @@
 from sqlmodel import Session
 from daos import TechnologyDao
 from database import Technology
-from models import TechnologyUpdate
+from models.technology import TechnologyUpdate
 from exceptions import TechnologyNotExists, TechnologyDeletingError, TechnologyCreationError, TechnologyUpdatingError, InvalidContentType
 from fastapi import UploadFile
 from utils import FileManager

@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
-from models import EntityTechnologyData, EntityType, TechnologyRead
+from models.entity_technology import EntityTechnologyData
+from models.entity_type import EntityType
+from models.technology import TechnologyRead
 from database import get_session
 from auth import require_access_token
 from services import EntityTechnologyService

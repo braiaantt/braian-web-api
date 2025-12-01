@@ -1,6 +1,6 @@
 from daos import EntityTechnologyDao
 from sqlmodel import Session
-from models import EntityTechnologyData
+from models.entity_technology import EntityTechnologyData
 from database import EntityTechnology
 from exceptions import EntityTechnologyCreationError, EntityTechnologyRelationNotExists
 from services import TechnologyService
