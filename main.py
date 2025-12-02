@@ -6,6 +6,7 @@ from routes.portfolio_routes import router as portfolio_router
 from routes.technology_routes import router as technology_router
 from routes.project_routes import router as project_router
 from routes.entity_images_routes import router as entity_image_router
+from routes.feature_routes import router as features_router
 from auth.auth_routes import router as auth_router
 from contextlib import asynccontextmanager
 from database.db import init_db
@@ -47,4 +48,9 @@ app.include_router(
 app.include_router(
     project_router,
     tags=["Project"]
+)
+
+app.include_router(
+    features_router,
+    tags=["Features"]
 )
