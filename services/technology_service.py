@@ -14,7 +14,10 @@ class TechnologyService:
         return self.technologyDao.get_all_techs()
 
     def get_technology_by_id(self, tech_id: int):
-        return self.technologyDao.get_tech(tech_id)
+        technology = self.technologyDao.get_tech(tech_id)
+        if not technology:
+            raise TechnologyNotExists
+        return technology
 
     async def insert_technology(self, tech_name: str, file: UploadFile):
         icon_src = await FileManager.save_image(file, FileManager.TECHNOLOGY_FOLDER)
