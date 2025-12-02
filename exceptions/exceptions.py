@@ -62,3 +62,14 @@ class EntityImageNotFound(Exception):
 
 class EntityImageDeletingError(Exception):
     pass
+
+#------ Feature Exceptions ------
+
+class FeatureCreationError(Exception):
+    pass
+
+class FeatureNotFound(Exception):
+    pass
+
+class FeatureDeletingError(Exception):
+    pass
