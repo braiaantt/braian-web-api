@@ -1,11 +1,10 @@
 from pydantic import BaseModel
-from models.entity_type import EntityType
-
-class ImageRelation(BaseModel):
-    entity_id: int
-    entity_type: EntityType
 
 class ImageRead(BaseModel):
-    entity_id: int
-    entity_type: EntityType
-    img_path: str
+    id: int
+    id_project: int
+    src: str
+
+class ImageDelete(BaseModel):
+    id_project: int
+    src: str
