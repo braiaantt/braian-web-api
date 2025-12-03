@@ -5,6 +5,7 @@ from database.tables import ProjectImage
 from utils.file_manager import FileManager
 from exceptions.exceptions import EntityImageCreationError, EntityImageNotFound, EntityImageDeletingError
 from fastapi import UploadFile
+from typing import Sequence
 import os
 
 class ProjectImageService:
@@ -37,4 +38,12 @@ class ProjectImageService:
             raise EntityImageDeletingError()
         
         return True
+    
+    def delete_images(self, paths: Sequence[str]):
+        for path in paths:
+            src = path.lstrip("/")
+            try:
+                os.remove(src)
+            except FileNotFoundError:
+                pass
     
