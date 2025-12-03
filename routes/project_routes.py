@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends, Form, File, UploadFile
 from services.project_service import ProjectService
 from services.feature_service import FeatureService
 from services.technical_info_service import TechnicalInfoService
+from services.entity_image_service import ProjectImageService
 from database.db import get_session
 from exceptions import ProjectNotExists, ProjectCreationError, ProjectUpdatingError, ProjectDeletingError
 from models.project import ProjectUpdate, ProjectRead
@@ -32,6 +33,11 @@ def get_features(project_id, session = Depends(get_session), _ = Depends(require
 def get_technical_info(project_id: int, session = Depends(get_session), _ = Depends(require_access_token)):
     service = TechnicalInfoService(session)    
     return service.get_technical_info(project_id)
+
+@router.get("/project/{project_id}/images", status_code=200, response_model=list[str])
+def get_images(project_id: int, session = Depends(get_session), _ = Depends(require_access_token)):
+    service = ProjectImageService(session)
+    return service.get_image_paths(project_id)
 
 @router.post("/project", status_code=201, response_model=ProjectRead)
 async def insert_project(
@@ -64,13 +70,12 @@ def update_project(update_data: ProjectUpdate, session = Depends(get_session), _
     except ProjectUpdatingError:
         raise HTTPException(status_code=500, detail="Database Error Updating Project")
     
-@router.delete("project/{project_id}", status_code=204)
+@router.delete("/project/{project_id}", status_code=204)
 def delete_project(project_id: int, session = Depends(get_session), _ = Depends(require_access_token)):
     service = ProjectService(session)
     try: 
-        result = service.delete_project(project_id)
-        if result:
-            return
+        service.delete_project(project_id)
+        return
     
     except ProjectNotExists:
         raise HTTPException(status_code=404, detail="Project To Delete Not Exists")
