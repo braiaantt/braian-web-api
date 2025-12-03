@@ -15,7 +15,7 @@ class ProjectDao:
         
     def get_project(self, project_id: int):
         try:
-            project = self.session.exec(select(Project).where(Project.id == project_id))
+            project = self.session.exec(select(Project).where(Project.id == project_id)).first()
             if not project:
                 return None
             
