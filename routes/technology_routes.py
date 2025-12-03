@@ -53,10 +53,8 @@ def update_technology(tech_id: int, data: TechnologyUpdate, session = Depends(ge
 def delete_technology(tech_id: int, session = Depends(get_session), _ = Depends(require_access_token)):
     service = TechnologyService(session)
     try:
-        result = service.delete_technology(tech_id)
-        
-        if result:
-            return
+        service.delete_technology(tech_id)
+        return
     
     except TechnologyNotExists:
         raise HTTPException(status_code=404, detail="Technology Not Exists")
