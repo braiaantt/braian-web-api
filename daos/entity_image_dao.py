@@ -1,13 +1,12 @@
 from sqlmodel import Session, select
 from sqlalchemy.exc import SQLAlchemyError
-from database.tables import Image
-from models.entity_image import ImageRead, ImageRelation
+from database.tables import ProjectImage
 
-class EntityImageDao:
+class ProjectImageDao:
     def __init__(self, session: Session):
         self.session = session
 
-    def add_image_relation(self, image: Image):
+    def add_image_relation(self, image: ProjectImage):
         try:
             self.session.add(image)
             self.session.commit()
@@ -19,25 +18,24 @@ class EntityImageDao:
             self.session.rollback()
             return None
         
-    def get_image(self, image_data: ImageRead):
-        image = self.session.exec(select(Image).where(
-                Image.id_entity == image_data.entity_id,
-                Image.type_entity == image_data.entity_type,
-                Image.src == image_data.img_path
+    def get_image(self, id_project: int, src: str):
+        image = self.session.exec(select(ProjectImage).where(
+                ProjectImage.id_project == id_project,
+                ProjectImage.src == src
                 )
             ).first()
         
         return image
 
-    def get_image_paths(self, image_data: ImageRelation):
-        paths = self.session.exec(select(Image.src).where(
-                Image.id_entity == image_data.entity_id,
-                Image.type_entity == image_data.entity_type
-                )
+    def get_image_paths(self, id_project: int):
+        paths = self.session.exec(
+            select(ProjectImage.src)
+            .where(ProjectImage.id_project == id_project)
+            .order_by(ProjectImage.id)
             ).all()
         return paths
 
-    def remove_image_relation(self, image: Image):
+    def remove_image(self, image: ProjectImage):
         try:
             self.session.delete(image)
             self.session.commit()
