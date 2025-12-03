@@ -72,9 +72,13 @@ def update_project(update_data: ProjectUpdate, session = Depends(get_session), _
     
 @router.delete("/project/{project_id}", status_code=204)
 def delete_project(project_id: int, session = Depends(get_session), _ = Depends(require_access_token)):
-    service = ProjectService(session)
+    project_service = ProjectService(session)
+    project_image_service = ProjectImageService(session)
     try: 
-        service.delete_project(project_id)
+        paths = project_image_service.get_image_paths(project_id)
+        project_service.delete_project(project_id)
+        project_image_service.delete_images(paths)
+
         return
     
     except ProjectNotExists:
