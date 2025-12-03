@@ -1,3 +1,4 @@
+from fastapi import UploadFile
 from daos.portfolio_dao import PortfolioDao
 from daos.technology_dao import TechnologyDao
 from daos.project_dao import ProjectDao
@@ -6,6 +7,7 @@ from models.technology import TechnologyRead
 from models.project import ProjectRead
 from database.tables import Portfolio
 from exceptions import PortfolioUpdatingError, PortfolioCreationError, PortfolioAlreadyExistsError, PortfolioNotExists
+from utils.file_manager import FileManager
 
 class PortfolioService():
     def __init__(self, session):
@@ -66,9 +68,28 @@ class PortfolioService():
         if not exists:
             raise PortfolioNotExists()
         
-        portfolio_updated = self.portfolio_dao.update_portfolio(data)
+        for key, value in data.items():
+                setattr(exists, key, value)
+
+        portfolio_updated = self.portfolio_dao.update_portfolio(exists)
 
         if not portfolio_updated:
             raise PortfolioUpdatingError()
             
         return portfolio_updated
+    
+    async def update_user_photo(self, _: int, file: UploadFile):
+        exists = self.portfolio_dao.get_portfolio()
+        if not exists:
+            raise PortfolioNotExists()
+        
+        FileManager.remove_image(exists.user_photo)
+
+        new_photo_path = await FileManager.save_image(file, FileManager.PORTFOLIO_FOLDER)
+        exists.user_photo = new_photo_path
+
+        updated = self.portfolio_dao.update_portfolio(exists)
+        if not updated:
+            raise PortfolioUpdatingError()
+        
+        return updated.user_photo
