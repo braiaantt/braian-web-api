@@ -18,18 +18,8 @@ class PortfolioDao:
             print("Error Insert Portfolio: ", error)
             return None
         
-    def update_portfolio(self, updates: dict):
+    def update_portfolio(self, portfolio: Portfolio):
         try:
-            portfolio = self.session.exec(select(Portfolio)).first()
-
-            if not portfolio:
-                print("Error Update Portfolio: Not Exists")
-                return None
-
-            for key, value in updates.items():
-                setattr(portfolio, key, value)
-
-            self.session.add(portfolio)
             self.session.commit()
             self.session.refresh(portfolio)
             return portfolio
@@ -40,15 +30,4 @@ class PortfolioDao:
             return None            
     
     def get_portfolio(self):
-        try:
-            portfolio = self.session.exec(select(Portfolio)).first()
-
-            if  portfolio:
-                return portfolio
-            else:
-                print("Error Update Portfolio: Not Exists")
-                return None
-            
-        except SQLAlchemyError as error:
-            print("Error Read Portfolio: ", error)
-            return None
+        return self.session.exec(select(Portfolio)).first()
