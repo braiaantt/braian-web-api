@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from sqlmodel import Session
 from database.db import get_session
 from database.tables import Portfolio
@@ -43,3 +43,21 @@ def update_portfolio(data: dict, session: Session = Depends(get_session), _ = De
         raise HTTPException(status_code=404, detail="Inexistent Portfolio To Update")
     except PortfolioUpdatingError:
         raise HTTPException(status_code=409, detail="Internal Error Updating Portfolio")
+    
+@router.put("/portfolio/{id}/user-photo", status_code=200, response_model=dict)
+async def update_user_photo(
+    id: int,
+    file: UploadFile = File(...),
+    session = Depends(get_session), 
+    _ = Depends(require_access_token)):
+
+    service = PortfolioService(session)
+    try:
+        path = await service.update_user_photo(id, file)
+        return {"path" : path}
+
+    except PortfolioNotExists:
+        raise HTTPException(status_code=404, detail="Portfolio Not Exists")
+    
+    except PortfolioUpdatingError:
+        raise HTTPException(status_code=500, detail="Database Error Updating Photo User")
