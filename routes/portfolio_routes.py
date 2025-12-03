@@ -14,7 +14,7 @@ def get_portfolio(session: Session = Depends(get_session)):
     portfolio = service.get_portfolio()
     
     if portfolio:
-        return {"data" : portfolio}
+        return portfolio
     
     raise HTTPException(status_code=404, detail="Portfolio Not Exists")
 
