@@ -37,12 +37,11 @@ class ProjectDao:
             self.session.rollback()
             return None
 
-    def delete_project(self, project_id):
+    def delete_project(self, project: Project):
         try:
-            statement = delete(Project).where(Project.id == project_id)
-            result = self.session.exec(statement)
+            self.session.delete(project)
             self.session.commit()
-            return result > 0
+            return True
         
         except SQLAlchemyError as error:
             print("Error Delete Project: ", error)
