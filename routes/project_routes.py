@@ -81,4 +81,4 @@ def delete_project(project_id: int, session = Depends(get_session), _ = Depends(
         raise HTTPException(status_code=404, detail="Project To Delete Not Exists")
 
     except ProjectDeletingError:
-        HTTPException(status_code=500, detail="Database Error Deleting Project")
+        raise HTTPException(status_code=500, detail="Database Error Deleting Project")
