@@ -5,6 +5,7 @@ from models.technology import TechnologyUpdate
 from exceptions import TechnologyNotExists, TechnologyDeletingError, TechnologyCreationError, TechnologyUpdatingError, InvalidContentType
 from fastapi import UploadFile
 from utils.file_manager import FileManager
+import os
 
 class TechnologyService:
     def __init__(self, session: Session):
@@ -54,6 +55,8 @@ class TechnologyService:
         if not exists:
             raise TechnologyNotExists()
         
+        src = exists.icon_src.lstrip("/")
+        os.remove(src)
         result = self.technologyDao.delete_tech(tech_id)
 
         if not result:
