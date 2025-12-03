@@ -1,6 +1,6 @@
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from auth.auth_routes import router as auth_router
 from routes.entity_technologies_routes import router as entity_technology_router
 from routes.portfolio_routes import router as portfolio_router
 from routes.technology_routes import router as technology_router
@@ -18,6 +18,13 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(lifespan=lifespan)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
