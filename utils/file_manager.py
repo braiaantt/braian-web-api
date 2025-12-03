@@ -8,6 +8,7 @@ class FileManager:
     STATIC_ROOT = "static"               
     TECHNOLOGY_FOLDER = "technologies"
     PROJECT_FOLDER = "projects"
+    PORTFOLIO_FOLDER = "portfolio"
 
     @staticmethod
     async def save_image(file: UploadFile, folder: str) -> str:
@@ -30,3 +31,11 @@ class FileManager:
         public_path = f"/static/{folder}/{unique_name}"
 
         return public_path
+    
+    @staticmethod
+    def remove_image(path: str):
+        path = path.lstrip("/")
+        try:
+            os.remove(path)
+        except FileNotFoundError:
+            pass
