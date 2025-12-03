@@ -1,10 +1,12 @@
 from fastapi import APIRouter, HTTPException, Depends, Form, File, UploadFile
 from services.project_service import ProjectService
 from services.feature_service import FeatureService
+from services.technical_info_service import TechnicalInfoService
 from database.db import get_session
 from exceptions import ProjectNotExists, ProjectCreationError, ProjectUpdatingError, ProjectDeletingError
 from models.project import ProjectUpdate, ProjectRead
 from models.feature import FeatureRead
+from models.technical_info import TechnicalInfoRead
 from auth.dependencies import require_access_token
 
 router = APIRouter()
@@ -25,6 +27,11 @@ def get_project(project_id: int, session = Depends(get_session)):
 def get_features(project_id, session = Depends(get_session), _ = Depends(require_access_token)):
     service = FeatureService(session)
     return service.get_features(project_id)
+
+@router.get("/project/{project_id}/technical-info", status_code=200, response_model=list[TechnicalInfoRead])
+def get_technical_info(project_id: int, session = Depends(get_session), _ = Depends(require_access_token)):
+    service = TechnicalInfoService(session)    
+    return service.get_technical_info(project_id)
 
 @router.post("/project", status_code=201, response_model=ProjectRead)
 async def insert_project(
