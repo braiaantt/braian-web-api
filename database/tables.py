@@ -37,10 +37,9 @@ class TechnicalInfo(SQLModel, table=True):
     id_project: int
     info: str
 
-class Image(SQLModel, table=True):
+class ProjectImage(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    id_entity: int
-    type_entity: str
+    id_project: int
     src: str
 
 class EntityTechnology(SQLModel, table=True):
