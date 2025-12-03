@@ -5,7 +5,7 @@ from models.project import ProjectUpdate, ProjectCreate
 from database.tables import Project
 from fastapi import UploadFile
 from utils.file_manager import FileManager
-import json
+import json, os
 
 class ProjectService:
     def __init__(self, session: Session):
@@ -48,8 +48,11 @@ class ProjectService:
         if not exists:
             raise ProjectNotExists()
         
-        result = self.project_dao.delete_project(exists)
+        src = exists.cover_src.lstrip("/")
+        os.remove(src)
         
+        result = self.project_dao.delete_project(exists)
+
         if not result:
             raise ProjectDeletingError()
         
