@@ -73,3 +73,14 @@ class FeatureNotFound(Exception):
 
 class FeatureDeletingError(Exception):
     pass
+
+#------ TechnicalInfo Exceptions ------
+
+class TechnicalInfoCreationError(Exception):
+    pass
+
+class TechnicalInfoDeletingError(Exception):
+    pass
+
+class TechnicalInfoNotFound(Exception):
+    pass
