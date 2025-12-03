@@ -1,4 +1,4 @@
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field, Relationship
 from typing import Optional
 from datetime import datetime
 
@@ -13,6 +13,11 @@ class Technology(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
     icon_src: str
+    
+    relations: list["EntityTechnology"] = Relationship(
+        back_populates="technology",
+        sa_relationship_kwargs={"cascade": "all, delete-orphan"}
+    )
 
 class Project(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
@@ -41,8 +46,12 @@ class Image(SQLModel, table=True):
 class EntityTechnology(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     id_entity: int
-    id_tech: int
+    id_tech: int = Field(foreign_key="technology.id")
     type_entity: str
+
+    technology: Optional[Technology] = Relationship(
+        back_populates="relations"
+    )
 
 #------ Auth ------
 
