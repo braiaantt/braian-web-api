@@ -48,8 +48,8 @@ class ProjectService:
         if not exists:
             raise ProjectNotExists()
         
-        result = self.project_dao.delete_project(project_id)
-
+        result = self.project_dao.delete_project(exists)
+        
         if not result:
             raise ProjectDeletingError()
         
