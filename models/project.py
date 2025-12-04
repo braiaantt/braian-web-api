@@ -27,6 +27,7 @@ class ProjectRead(BaseModel):
     techs: list[TechnologyRead]
     feats: list[FeatureRead]
     technical_info: list[TechnicalInfoRead]
+    img_paths: list[str]
 
 class PortfolioProjectRead(BaseModel):
     id: int
