@@ -3,6 +3,7 @@ from sqlmodel import Session
 from services.entity_technology_service import EntityTechnologyService
 from services.feature_service import FeatureService
 from services.technical_info_service import TechnicalInfoService
+from services.entity_image_service import ProjectImageService
 from exceptions import ProjectNotExists, ProjectDeletingError, ProjectUpdatingError, ProjectCreationError
 from models.project import ProjectUpdate, ProjectCreate, ProjectRead
 from models.technology import TechnologyRead
@@ -40,7 +41,8 @@ class ProjectService:
             cover_src=exists.cover_src,
             techs=[],
             feats=[],
-            technical_info=[]
+            technical_info=[],
+            img_paths=[]
         )
 
         #get technologies
@@ -58,6 +60,11 @@ class ProjectService:
         technical_info_service = TechnicalInfoService(self.session)
         info = technical_info_service.get_technical_info(project.id)
         project.technical_info = [TechnicalInfoRead.model_validate(i.model_dump()) for i in info]
+
+        #get img paths
+        project_image_service = ProjectImageService(self.session)
+        paths = project_image_service.get_image_paths(project.id)
+        project.img_paths = list(paths)
 
         return project
     
