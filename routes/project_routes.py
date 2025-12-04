@@ -5,21 +5,18 @@ from services.technical_info_service import TechnicalInfoService
 from services.entity_image_service import ProjectImageService
 from database.db import get_session
 from exceptions import ProjectNotExists, ProjectCreationError, ProjectUpdatingError, ProjectDeletingError
-from models.project import ProjectUpdate, ProjectRead
+from models.project import ProjectUpdate, ProjectRead, PortfolioProjectRead
 from models.feature import FeatureRead
 from models.technical_info import TechnicalInfoRead
 from auth.dependencies import require_access_token
 
 router = APIRouter()
 
-@router.get("/project/{project_id}", status_code=200)
+@router.get("/project/{project_id}", status_code=200, response_model=ProjectRead)
 def get_project(project_id: int, session = Depends(get_session)):
     service = ProjectService(session)
     try: 
-        project = service.get_project(project_id)
-
-        if project:
-            return project
+        return service.get_project(project_id)
     
     except ProjectNotExists:
         raise HTTPException(status_code=404, detail="Project Not Exists")
@@ -39,7 +36,7 @@ def get_images(project_id: int, session = Depends(get_session), _ = Depends(requ
     service = ProjectImageService(session)
     return service.get_image_paths(project_id)
 
-@router.post("/project", status_code=201, response_model=ProjectRead)
+@router.post("/project", status_code=201, response_model=PortfolioProjectRead)
 async def insert_project(
     project: str = Form(...),
     file: UploadFile = File(...),
