@@ -4,7 +4,7 @@ from daos.technology_dao import TechnologyDao
 from daos.project_dao import ProjectDao
 from models.portfolio import PortfolioRead
 from models.technology import TechnologyRead
-from models.project import ProjectRead
+from models.project import PortfolioProjectRead
 from database.tables import Portfolio
 from exceptions import PortfolioUpdatingError, PortfolioCreationError, PortfolioAlreadyExistsError, PortfolioNotExists
 from utils.file_manager import FileManager
@@ -43,7 +43,7 @@ class PortfolioService():
         #get projects
         projects = self.project_dao.get_portfolio_projects()
         portfolio.projects = [
-            ProjectRead.model_validate(project.model_dump())
+            PortfolioProjectRead.model_validate(project.model_dump())
             for project in projects
         ]
 
