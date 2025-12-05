@@ -5,7 +5,7 @@ from models.technology import TechnologyRead
 from database.db import get_session
 from auth.dependencies import require_access_token
 from services.entity_technology_service import EntityTechnologyService
-from exceptions import EntityTechnologyCreationError, EntityTechnologyRelationNotExists
+from exceptions import EntityTechnologyCreationError, EntityTechnologyRelationNotExists, TechnologyNotExists
 
 router = APIRouter()
 
@@ -14,8 +14,8 @@ def get_relations(id_entity: int, type_entity: EntityType, session = Depends(get
     service = EntityTechnologyService(session)
     try:
         return service.get_relations(id_entity, type_entity)
-    except Exception:
-        raise HTTPException(status_code=404, detail="Entity Not Found")
+    except TechnologyNotExists:
+        raise HTTPException(status_code=404, detail="Technology Requested Not Found")
 
 @router.post("/entity-technology", status_code=201, response_model=EntityTechnologyData)
 def relate_technology(data: EntityTechnologyData, session = Depends(get_session), _ = Depends(require_access_token)):
