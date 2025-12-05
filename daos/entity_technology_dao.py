@@ -25,7 +25,7 @@ class EntityTechnologyDao:
                 EntityTechnology.id_entity == id_entity,
                 EntityTechnology.type_entity == type_entity
             )
-        )
+        ).all()
 
     def get_relation(self, data: EntityTechnologyData):
         return self.session.exec(
