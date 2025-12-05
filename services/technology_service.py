@@ -17,7 +17,7 @@ class TechnologyService:
     def get_technology_by_id(self, tech_id: int):
         technology = self.technologyDao.get_tech(tech_id)
         if not technology:
-            raise TechnologyNotExists
+            raise TechnologyNotExists()
         return technology
 
     async def insert_technology(self, tech_name: str, file: UploadFile):
