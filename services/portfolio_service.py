@@ -1,7 +1,7 @@
 from fastapi import UploadFile
 from daos.portfolio_dao import PortfolioDao
-from daos.technology_dao import TechnologyDao
 from daos.project_dao import ProjectDao
+from services.entity_technology_service import EntityTechnologyService
 from models.portfolio import PortfolioRead
 from models.technology import TechnologyRead
 from models.project import PortfolioProjectRead
@@ -11,8 +11,8 @@ from utils.file_manager import FileManager
 
 class PortfolioService():
     def __init__(self, session):
+        self.session = session
         self.portfolio_dao = PortfolioDao(session)
-        self.technology_dao = TechnologyDao(session)
         self.project_dao = ProjectDao(session)
 
 
@@ -33,12 +33,12 @@ class PortfolioService():
         )
 
         #get technologies
-        tech_ids = self.technology_dao.get_tech_ids(base_portfolio.id, "portfolio")
-        techs = self.technology_dao.get_entity_techs(tech_ids)
+        entity_tech_service = EntityTechnologyService(self.session)
+        techs = entity_tech_service.get_relations(1, "portfolio")
         portfolio.techs = [
-            TechnologyRead.model_validate(tech.model_dump())
-            for tech in techs
-        ]
+                TechnologyRead.model_validate(tech.model_dump())
+                for tech in techs
+            ]
 
         #get projects
         projects = self.project_dao.get_portfolio_projects()
