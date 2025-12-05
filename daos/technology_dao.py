@@ -1,6 +1,6 @@
 from sqlmodel import Session, select, delete
 from sqlalchemy.exc import SQLAlchemyError
-from database.tables import Technology, EntityTechnology
+from database.tables import Technology
 
 class TechnologyDao:
     def __init__(self, session: Session):
@@ -20,19 +20,6 @@ class TechnologyDao:
         
     def get_all_techs(self):
         return self.session.exec(select(Technology)).all()
-
-    def get_tech_ids(self, id_entity: int, type_entity: str):
-        try:
-            query = select(EntityTechnology.id_tech).where(
-                (EntityTechnology.id_entity == id_entity) &
-                (EntityTechnology.type_entity == type_entity)
-            )
-            results = self.session.exec(query).all()
-            return results
-        
-        except SQLAlchemyError as error:
-            print("Error Read EntityTechnology: ", error)
-            return []
 
     def get_entity_techs(self, tech_ids: list[int]):
         query = select(Technology).where(Technology.id.in_(tech_ids))
