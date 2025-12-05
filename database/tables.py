@@ -27,20 +27,47 @@ class Project(SQLModel, table=True):
     user_comment: str
     cover_src: str
 
+    p_relations: list["Feature"] = Relationship(
+        back_populates="project",
+        sa_relationship_kwargs={"cascade": "all, delete-orphan"}
+    )
+
+    ti_relations: list["TechnicalInfo"] = Relationship(
+        back_populates="project",
+        sa_relationship_kwargs={"cascade": "all, delete-orphan"}
+    )
+
+    img_relations: list["ProjectImage"] = Relationship(
+        back_populates="project",
+        sa_relationship_kwargs={"cascade": "all, delete-orphan"}
+    )
+
 class Feature(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    id_project: int
+    id_project: int = Field(foreign_key="project.id")
     feat: str
+
+    project: Optional[Project] = Relationship(
+        back_populates="p_relations"
+    )
 
 class TechnicalInfo(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    id_project: int
+    id_project: int = Field(foreign_key="project.id")
     info: str
+
+    project: Optional[Project] = Relationship(
+        back_populates="ti_relations"
+    )
 
 class ProjectImage(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    id_project: int
+    id_project: int = Field(foreign_key="project.id")
     src: str
+
+    project: Optional[Project] = Relationship(
+        back_populates="img_relations"
+    )
 
 class EntityTechnology(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
