@@ -1,67 +1,92 @@
-# 🚀 Update Server API
+# 📘 Braian Web API
 
-## 📌 Descripción breve
-Esta API fue diseñada como un servidor liviano de actualizaciones. Como está pensada para operar solo en momentos puntuales, toda la información necesaria —nombre de la aplicación, versiones y ruta del archivo físico— se almacena temporalmente en memoria para simplificar el ciclo de uso.
+Esta API funciona como backend del sitio web personal y permite administrar todo el contenido que se muestra públicamente:
 
-El objetivo principal es facilitar la distribución de actualizaciones de la aplicación EzWork: cuando necesito publicar una nueva versión, levanto el servidor, registro la aplicación junto con el número de versión y la ubicación del archivo a descargar, y la API se encarga de exponer los metadatos necesarios para que el cliente obtenga la actualización.
+- Información del usuario  
+- Tecnologías utilizadas  
+- Proyectos del portfolio  
+- Características e información técnica por proyecto
+- Imágenes asociadas  
+- Relaciones entre entidades  
 
----
-
-## ✨ Características principales
-- Obtener listado de aplicaciones disponibles.
-- Consultar versiones de una aplicación específica.
-- Descargar archivos por versión o la última versión disponible.
-- Subir aplicaciones nuevas.
-- Registrar nuevas versiones de una app existente.
+El diseño está orientado a mantener una estructura clara y cómoda para desarrollar, separando responsabilidades en diferentes capas: **rutas**, **servicios**, **DAOs**, **modelos** y **utilidades**.  
 
 ---
 
-# 📡 Endpoints
-## 🟢 Estado del servidor
-### **GET `/ping`**
-Verifica conectividad con el servidor.
+## 🧩 Características principales
+
+- Gestión completa tanto del portfolio como de cada proyecto (CRUD). 
+- Manejo de imágenes con almacenamiento en disco.
+- Autenticación basada en JWT
+- Rutas de administración protegidas con access token.
 
 ---
 
-## 📁 Aplicaciones
-### **GET `/apps`**
-Obtiene la lista de aplicaciones alojadas en el servidor.
+## 📡 Endpoints principales
 
-### **GET `/apps/{app_name}`**
-Obtiene todas las versiones disponibles de una aplicación específica.
+La estructura de los endpoints y métodos HTTP busca seguir los principios de **estilo REST**.
 
-### **POST `/apps`**
-Registra una nueva aplicación en el servidor junto con su numero de versión.
+### 🧾 Autenticación
+- `POST /login` – Genera Access y Refresh Tokens.  
+- `POST /refresh` – Renueva tokens.
 
 ---
 
-## 🔄 Versiones de aplicaciones
-### **GET `/apps/{app_name}/latest`**
-Obtiene el archivo correspondiente a la última versión disponible de una aplicación.
-
-### **GET `/apps/{app_name}/latest/metadata`**
-Obtiene información relacionada con la última versión de una aplicación.
-
-### **GET `/apps/{app_name}/{app_version}`**
-Obtiene el archivo correspondiente a una versión específica de una aplicación.
-
-### **POST `/apps/{app_name}/versions`**
-Agrega una nueva versión a una aplicación ya existente.
+### 👤 Portfolio
+- `GET /portfolio`  
+- `POST /portfolio` *(protegido)*  
+- `PUT /portfolio` *(protegido)*  
+- `PUT /portfolio/{id}/user-photo` *(protegido)*  
 
 ---
 
-## 📝 Logging
-### **POST `/log`**
-Registra un mensaje enviado por el cliente.
+### 📁 Proyectos
+- `GET /project/{id}`  
+- `GET /project/{id}/features` *(protegido)*  
+- `GET /project/{id}/technical-info` *(protegido)*  
+- `GET /project/{id}/images` *(protegido)*  
+- `POST /project` *(protegido, con imagen)*  
+- `PUT /project/{id}` *(protegido)*  
+- `DELETE /project/{id}` *(protegido)*  
 
 ---
 
-## 🗂️ Documentación interna adicional
-La API incluye:
-- Validación automática de datos con modelos Pydantic.
-- Manejadores personalizados para errores (`HTTPException`, `ValidationError`, excepciones generales). 
-- Devolución de archivos mediante `FileResponse` para descargas directas.
+### 🔧 Tecnologías
+- `GET /technology` *(protegido)*  
+- `POST /technology` *(protegido, con imagen)*  
+- `PUT /technology/{tech_id}` *(protegido)*  
+- `DELETE /technology/{tech_id}` *(protegido)*  
 
 ---
 
+## 🗄️ Base de datos
 
+Las tablas de la base de datos son:
+
+- **Portfolio**
+- **Project**
+- **Technology**
+- **Feature**
+- **TechnicalInfo**
+- **ProjectImage**
+- **EntityTechnology** (tabla intermedia)
+- **Admin**
+- **RefreshToken**
+
+Incluye claves foráneas, eliminación en cascada y validaciones integradas.
+
+---
+
+## 📂 Manejo de archivos
+
+La API soporta subida de imágenes para:
+
+- Foto del usuario  
+- Iconos de tecnologías  
+- Portadas de proyectos  
+- Galerías de proyectos  
+
+Las imagenes se almacenan en carpetas locales expuestas a través de `/static`.
+Las rutas de subida utilizan **multipart/form-data**, permitiendo enviar metadatos junto con archivos.
+
+---
