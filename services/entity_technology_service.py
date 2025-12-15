@@ -2,7 +2,7 @@ from daos.entity_technology_dao import EntityTechnologyDao
 from sqlmodel import Session
 from models.entity_technology import EntityTechnologyData
 from database.tables import EntityTechnology
-from exceptions import EntityTechnologyCreationError, EntityTechnologyRelationNotExists
+from exceptions.exceptions import EntityTechnologyCreationError, EntityTechnologyRelationNotExists, EntityTechnologyDeletingError
 from services.technology_service import TechnologyService
 
 class EntityTechnologyService:
@@ -40,3 +40,8 @@ class EntityTechnologyService:
             raise EntityTechnologyRelationNotExists()
         
         return self.entity_technology_dao.delete_entity_technology(relation)
+    
+    def delete_relations_by_id(self, entity_id: int):
+        success = self.entity_technology_dao.delete_by_entity_id(entity_id)
+        if not success:
+            raise EntityTechnologyDeletingError()
