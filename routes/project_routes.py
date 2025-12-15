@@ -3,8 +3,9 @@ from services.project_service import ProjectService
 from services.feature_service import FeatureService
 from services.technical_info_service import TechnicalInfoService
 from services.entity_image_service import ProjectImageService
+from services.entity_technology_service import EntityTechnologyService
 from database.db import get_session
-from exceptions import ProjectNotExists, ProjectCreationError, ProjectUpdatingError, ProjectDeletingError
+from exceptions.exceptions import ProjectNotExists, ProjectCreationError, ProjectUpdatingError, ProjectDeletingError, EntityTechnologyDeletingError
 from models.project import ProjectUpdate, ProjectRead, PortfolioProjectRead
 from models.feature import FeatureRead
 from models.technical_info import TechnicalInfoRead
@@ -71,11 +72,13 @@ def update_project(update_data: ProjectUpdate, session = Depends(get_session), _
 def delete_project(project_id: int, session = Depends(get_session), _ = Depends(require_access_token)):
     project_service = ProjectService(session)
     project_image_service = ProjectImageService(session)
+    entity_technology_service = EntityTechnologyService(session)
+
     try: 
         paths = project_image_service.get_image_paths(project_id)
         project_service.delete_project(project_id)
         project_image_service.delete_images(paths)
-
+        entity_technology_service.delete_relations_by_id(project_id)
         return
     
     except ProjectNotExists:
@@ -83,3 +86,6 @@ def delete_project(project_id: int, session = Depends(get_session), _ = Depends(
 
     except ProjectDeletingError:
         raise HTTPException(status_code=500, detail="Database Error Deleting Project")
+    
+    except EntityTechnologyDeletingError:
+        raise HTTPException(status_code=500, detail="Database Error Deleting Technologies relations with Project")
