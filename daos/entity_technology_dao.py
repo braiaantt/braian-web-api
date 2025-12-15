@@ -1,4 +1,4 @@
-from sqlmodel import Session, select
+from sqlmodel import Session, select, delete
 from sqlalchemy.exc import SQLAlchemyError
 from database.tables import EntityTechnology
 from models.entity_technology import EntityTechnologyData
@@ -46,4 +46,16 @@ class EntityTechnologyDao:
         except SQLAlchemyError as error:
             self.session.rollback()
             print("Error Delete EntityTechnology", error)
+            return False
+        
+    def delete_by_entity_id(self, entity_id: int):
+        try:
+            stmt = delete(EntityTechnology).where(EntityTechnology.id_entity == entity_id)
+            self.session.exec(stmt)
+            self.session.commit()
+            return True
+        
+        except SQLAlchemyError as error:
+            print("Error Delete EntityTechnology By Id: ", error)
+            self.session.rollback()
             return False
