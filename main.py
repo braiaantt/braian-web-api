@@ -20,7 +20,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://braian.net", "https://wwww.braian.net"],
+    allow_origins=["https://braian.net", "https://www.braian.net"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
