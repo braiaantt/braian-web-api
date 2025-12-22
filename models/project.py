@@ -9,7 +9,12 @@ class ProjectUpdate(BaseModel):
     small_about: Optional[str] = None
     big_about: Optional[str] = None
     user_comment: Optional[str] = None
-    cover_src: Optional[str] = None
+
+class ProjectResponse(BaseModel):
+    name: str
+    small_about: str
+    big_about: str
+    user_comment: str
 
 class ProjectCreate(BaseModel):
     name: str
