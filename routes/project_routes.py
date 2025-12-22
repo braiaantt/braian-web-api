@@ -6,7 +6,7 @@ from services.entity_image_service import ProjectImageService
 from services.entity_technology_service import EntityTechnologyService
 from database.db import get_session
 from exceptions.exceptions import ProjectNotExists, ProjectCreationError, ProjectUpdatingError, ProjectDeletingError, EntityTechnologyDeletingError
-from models.project import ProjectUpdate, ProjectRead, PortfolioProjectRead
+from models.project import ProjectUpdate, ProjectRead, PortfolioProjectRead, ProjectResponse
 from models.feature import FeatureRead
 from models.technical_info import TechnicalInfoRead
 from auth.dependencies import require_access_token
@@ -54,11 +54,11 @@ async def insert_project(
     except ProjectCreationError:
         raise HTTPException(status_code=500, detail="Database Error Creating Project")
     
-@router.put("/project/{project_id}", status_code=200)
-def update_project(update_data: ProjectUpdate, session = Depends(get_session), _ = Depends(require_access_token)):
+@router.put("/project/{project_id}", status_code=200, response_model=ProjectResponse)
+def update_project(project_id: int, update_data: ProjectUpdate, session = Depends(get_session), _ = Depends(require_access_token)):
     service = ProjectService(session)
     try:
-        project_updated = service.update_project(update_data)
+        project_updated = service.update_project(project_id, update_data)
         if project_updated:
             return project_updated
     
