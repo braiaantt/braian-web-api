@@ -75,7 +75,7 @@ class ProjectService:
             
         update_data = data.model_dump(exclude_unset=True)
 
-        for key, value in update_data.items:
+        for key, value in update_data.items():
             setattr(project, key, value)
 
         project_updated = self.project_dao.update_project(project)
