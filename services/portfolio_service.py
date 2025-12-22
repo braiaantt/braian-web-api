@@ -2,7 +2,7 @@ from fastapi import UploadFile
 from daos.portfolio_dao import PortfolioDao
 from daos.project_dao import ProjectDao
 from services.entity_technology_service import EntityTechnologyService
-from models.portfolio import PortfolioRead
+from models.portfolio import PortfolioRead, PortfolioUpdate
 from models.technology import TechnologyRead
 from models.project import PortfolioProjectRead
 from database.tables import Portfolio
@@ -62,13 +62,15 @@ class PortfolioService():
         
         return created
         
-    def update_portfolio(self, data: dict):
+    def update_portfolio(self, data: PortfolioUpdate):
         exists = self.portfolio_dao.get_portfolio()
 
         if not exists:
             raise PortfolioNotExists()
         
-        for key, value in data.items():
+        update_data = data.model_dump(exclude_unset=True)
+
+        for key, value in update_data.items():
                 setattr(exists, key, value)
 
         portfolio_updated = self.portfolio_dao.update_portfolio(exists)
