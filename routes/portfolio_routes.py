@@ -5,6 +5,7 @@ from database.tables import Portfolio
 from services.portfolio_service import PortfolioService
 from exceptions import PortfolioUpdatingError, PortfolioCreationError, PortfolioAlreadyExistsError, PortfolioNotExists
 from auth.dependencies import require_access_token
+from models.portfolio import PortfolioUpdate
 
 router = APIRouter()
 
@@ -32,7 +33,7 @@ def add_portfolio(portfolio: Portfolio, session: Session = Depends(get_session),
         raise HTTPException(status_code=500, detail="Error Creating Portfolio")
         
 @router.put("/portfolio", status_code=200)
-def update_portfolio(data: dict, session: Session = Depends(get_session), _ = Depends(require_access_token)):
+def update_portfolio(data: PortfolioUpdate, session: Session = Depends(get_session), _ = Depends(require_access_token)):
     service = PortfolioService(session)
     try:
         portfolio_updated = service.update_portfolio(data)
